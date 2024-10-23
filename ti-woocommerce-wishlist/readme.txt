@@ -2,8 +2,8 @@
 Contributors: templateinvaders
 Tags: woocommerce, wishlist, woocommerce wishlist, shop, ecommerce
 Requires at least: 6.1
-Tested up to: 6.4
-Stable tag: 2.8.2
+Tested up to: 6.6
+Stable tag: 2.9.1
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -158,40 +158,22 @@ Yes, you can! Join in on our [GitHub repository](https://github.com/TemplateInva
 
 
 == Changelog ==
-= 2.8.2 =
-*Release Date - 3 March 2024*
 
-- **Added**: Support for PHP 8.3
-- **Added**: Integration with [WP Armour - Honeypot Anti Spam](https://wordpress.org/plugins/honeypot/) plugin
+= 2.9.1 =
+*Release Date - 22 October 2024*
 
-= 2.8.1 =
-*Release Date - 21 February 2024*
+- **Fixed**: SQL Injection vulnerability related to multilingual plugins
 
-- **Added**: Support for WooCommerce 8.6.x
-- **Added**: Wishlist creation for guests via REST API. Use the route wp-json/wc/v3/wishlist/get_by_user/0
-- **Fixed**: PHP warning in wishlist products counter
-- **Fixed**: PHP error on plugin uninstall
-- **Removed**: Network activation restriction
-- **Fixed**: Issue with REST API get products request arguments
+= 2.9.0 =
+*Release Date - 11 October 2024*
 
-
-= 2.8.0 =
-*Release Date - 24 November 2023*
-
-- **Added**: Support for WordPress 6.4
-- **Added**: Support for WooCommerce 8.3
-- **Added**: Option to erase all data on uninstall
-- **Updated**: Integration with [WPC Product Bundles for WooCommerce](https://wordpress.org/plugins/woo-product-bundle/)
-- **Fixed**: Issue with `alt` attribute of a custom image for products counter icon
-- **Fixed**: 'Add to Cart' button issue for parent product
-- **Fixed**: Scheduled event hooks issue
-- **Fixed**: PHP 8.1 deprecation warnings
-- **Fixed**: Missing space in HTML markup
-- **Fixed**: REST API wishlist data inconsistencies
+- **Added**: Support for WordPress 6.6.x
+- **Added**: Support for WooCommerce 9.3.x
+- **Fixed**: SQL Injection vulnerability
 
 [See the changelog for all versions](https://templateinvaders.com/changelogs/ti-woocommerce-wishlist-plugin-free-changelog/?utm_source=wordpressorg&utm_content=changelog).
 
 == Upgrade Notice ==
 
-= 2.0.0 =
-Major update with new features
+= 2.9.1 =
+**Fixed**: SQL Injection vulnerability related to multilingual plugins

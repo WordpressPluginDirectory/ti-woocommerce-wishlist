@@ -108,6 +108,7 @@ class TInvWL_Wishlist {
 	 * @return boolean|array
 	 */
 	function add_user_default( $user_id = 0 ) {
+		$user_id = absint( $user_id );
 		if ( empty( $user_id ) ) {
 			$user_id = $this->user;
 		}
@@ -246,7 +247,9 @@ class TInvWL_Wishlist {
 		if ( empty( $sharekey ) ) {
 			$sharekey = $this->get_sharekey();
 		}
-		if ( empty( $sharekey ) ) {
+
+		//validate sharekey
+		if ( empty( $sharekey ) || ! is_string( $sharekey ) || ! preg_match( '/[a-f0-9]{6}/i', $sharekey ) ) {
 			return array();
 		}
 
@@ -266,20 +269,19 @@ class TInvWL_Wishlist {
 	 *
 	 * @return array
 	 */
-	function get_by_user( $user_id = 0, $data = array() ) {
+	function get_by_user( $user_id = 0 ) {
 		$user_id = absint( $user_id );
 		if ( empty( $user_id ) ) {
 			$user_id = $this->user;
 		}
 		$this->add_user_default( $user_id );
-		$_data = array(
+		$data = array(
 			'author' => $user_id,
 		);
 
-		if ( ! current_user_can( 'tinvwl_general_settings' ) && ( empty( $this->user ) || ( $_data['author'] != $this->user ) ) ) { // WPCS: loose comparison ok.
-			$_data['status'] = 'public';
+		if ( ! current_user_can( 'tinvwl_general_settings' ) && ( empty( $this->user ) || ( $data['author'] != $this->user ) ) ) { // WPCS: loose comparison ok.
+			$data['status'] = 'public';
 		}
-		$data = tinv_array_merge( $data, $_data );
 
 		return $this->get( $data );
 	}
@@ -354,6 +356,15 @@ class TInvWL_Wishlist {
 				$default[ $_k ] = $data[ $_k ];
 				unset( $data[ $_k ] );
 			}
+		}
+
+		//proper sanitizing
+		$default['offset'] = absint( $default['offset'] );
+		$default['count']  = absint( $default['count'] );
+		//the order value is passed directly to the db so it needs to be protected against sql_injections
+		$valid_order_values = array( 'ASC', 'DESC' );
+		if ( ! in_array( strtoupper( $default['order'] ), $valid_order_values, true ) ) {
+			$default['order'] = 'ASC';
 		}
 
 		if ( is_array( $default['field'] ) ) {
@@ -445,6 +456,10 @@ class TInvWL_Wishlist {
 	 *
 	 */
 	function update( $id, $data, $type = 'list', $status = 'public' ) {
+		global $wpdb;
+
+		$id = absint( $id );
+
 		if ( ! is_array( $data ) ) {
 			$data = array(
 				'title'  => $data,
@@ -458,6 +473,7 @@ class TInvWL_Wishlist {
 			'type'   => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
 			'author' => FILTER_VALIDATE_INT,
 		) ) );
+
 		$data = array_filter( $data );
 		$data = apply_filters( 'tinvwl_wishlist_update', $data, $id );
 		if ( ! array_key_exists( 'title', $data ) ) {
@@ -466,9 +482,8 @@ class TInvWL_Wishlist {
 				$data['title'] = '';
 			}
 		}
-		global $wpdb;
 
-		return false !== $wpdb->update( $this->table, $data, array( 'ID' => $id ) ); // WPCS: db call ok; no-cache ok; unprepared SQL ok.
+		return false !== $wpdb->update( $this->table, $data, array( 'ID' => $id ) );
 	}
 
 	/**
